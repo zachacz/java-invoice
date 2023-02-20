@@ -28,10 +28,10 @@ public class Invoice {
 
         if (quantity <= 0) {
 
-            throw new IllegalArgumentException("Quantity can not be negative.");
+            throw new IllegalArgumentException("Quantity can not be 0 or negative.");
         }
 
-        for (int i=0; i <  quantity; i++) {
+        for (int i=0; i<quantity; i++) {
 
             this.products.add(product);
         }
