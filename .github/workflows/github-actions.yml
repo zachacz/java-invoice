@@ -15,7 +15,7 @@ jobs:
         run: mvn test
 
   lint:
-    name: Unit tests
+    name: Checkstyle
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,5 +24,5 @@ jobs:
         with:
           java-version: '15'
           distribution: 'adopt'
-      - name: Test
+      - name: Checkstyle
         run: mvn checkstyle:check
