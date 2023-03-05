@@ -12,4 +12,17 @@ jobs:
           java-version: '15'
           distribution: 'adopt'
       - name: Test
+        run: mvn test
+
+  lint:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '15'
+          distribution: 'adopt'
+      - name: Test
         run: mvn checkstyle:check
