@@ -11,6 +11,7 @@ public class Invoice {
     private static int nextNumber = 0;
 
     private final int number = ++nextNumber;
+
     public void addProduct(Product product) {
 
         addProduct(product, 1);
