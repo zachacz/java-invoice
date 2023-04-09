@@ -84,11 +84,22 @@ public class Invoice {
 
         System.out.println("Invoice number: " + getInvoiceNumber());
 
+<<<<<<< HEAD
         for (Product product : products.keySet()) {
 
             System.out.println(product.getName() + " " + products.get(product) + " "
                     + product.getPrice() + "zl");
         }
+=======
+        StringBuilder sb = new StringBuilder();
+
+        for (Product product : products.keySet()) {
+
+            sb.append(product.getName() + " " + products.get(product) + " " + product.getPrice() + "zl\n").toString();
+
+        }
+
+>>>>>>> 6714c031719d8dd6beba30b519911b1fda11c4cc
         System.out.println("Number of items: " + getNumberOfItems());
     }
 }
