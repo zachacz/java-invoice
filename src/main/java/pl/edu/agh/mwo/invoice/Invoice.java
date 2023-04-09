@@ -12,14 +12,10 @@ public class Invoice {
 
     private final int invoiceNumber;
 
-    private int numberOfItems;
 
     public Invoice() {
 
         this.invoiceNumber = ++nextNumber;
-
-        this.numberOfItems = getItemsTotal();
-
 
     }
 
@@ -34,40 +30,19 @@ public class Invoice {
             throw new IllegalArgumentException();
         }
 
-        if (checkIfInvoiceHasProduct(product)) {
+        Integer foundQuantity = products.get(product);
 
-                for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+        if (foundQuantity == null) {
 
-                    Product foundProduct = entry.getKey();
+            products.put(product, quantity);
 
-                    Integer foundQuantity = entry.getValue();
-
-                    if (foundProduct.equals((product))) {
-
-                        entry.setValue(foundQuantity + quantity);
-                    }
-                }
         }
 
         else {
 
-            products.put(product, quantity);
+            products.put(product, foundQuantity + quantity);
         }
 
-    }
-
-    public boolean checkIfInvoiceHasProduct(Product product) {
-
-        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
-
-            Product foundProduct = entry.getKey();
-
-            if (product.equals(foundProduct)) {
-
-                return true;
-            }
-        }
-        return false;
     }
 
 
@@ -98,10 +73,28 @@ public class Invoice {
         return invoiceNumber;
     }
 
-    public int getItemsTotal() {
+    public int getNumberOfItems() {
 
-        numberOfItems = this.products.size();
+        return products.size();
+    }
 
-        return numberOfItems;
+    public int getProductQuantity(Product product) {
+
+        return products.get(product);
+    }
+
+    public void printInvoice() {
+
+        System.out.println("Invoice number: " + getInvoiceNumber());
+
+        StringBuilder sb = new StringBuilder();
+
+        for (Product product : products.keySet()) {
+
+            sb.append(product.getName() + " " + products.get(product) + " " + product.getPrice() + "zl\n").toString();
+
+        }
+
+        System.out.println("Number of items: " + getNumberOfItems());
     }
 }

@@ -1,6 +1,7 @@
 package pl.edu.agh.mwo.invoice.product;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -53,5 +54,33 @@ public class ProductTest {
     @Test(expected = IllegalArgumentException.class)
     public void testProductWithNegativePrice() {
         new TaxFreeProduct("Mandarynki", new BigDecimal("-1.00"));
+    }
+
+    @Test
+    public void testPriceAndTaxBottleOfWineProduct() {
+        Product product = new BottleOfWine("Wino", new BigDecimal("100.0"));
+        Assert.assertThat(new BigDecimal("100"), Matchers.comparesEqualTo(product.getPrice()));
+        Assert.assertThat(new BigDecimal("0.23"), Matchers.comparesEqualTo(product.getTaxPercent()));
+        Assert.assertThat(new BigDecimal("128.56"), Matchers.comparesEqualTo(product.getPriceWithTax()));
+    }
+
+    @Test
+    public void testPriceAndTaxFuelCanisterProduct() {
+
+        FuelCanister.localDateTime = () -> LocalDateTime.of(2023,3,10, 8, 0, 0, 0);
+
+        Product product = new FuelCanister("Benzyna", new BigDecimal("1000.0"));
+        Assert.assertThat(new BigDecimal("1000"), Matchers.comparesEqualTo(product.getPrice()));
+        Assert.assertThat(new BigDecimal("0.23"), Matchers.comparesEqualTo(product.getTaxPercent()));
+        Assert.assertThat(new BigDecimal("1235.56"), Matchers.comparesEqualTo(product.getPriceWithTax()));
+    }
+
+    @Test
+    public void testPriceFuelCanisterProductAtDzienTesciowej() {
+
+        FuelCanister.localDateTime = () -> LocalDateTime.of(2023,3,5, 8, 0, 0, 0);
+
+        Product product = new FuelCanister("Benzyna", new BigDecimal("1000.0"));
+        Assert.assertThat(new BigDecimal("1005.56"), Matchers.comparesEqualTo(product.getPriceWithTax()));
     }
 }

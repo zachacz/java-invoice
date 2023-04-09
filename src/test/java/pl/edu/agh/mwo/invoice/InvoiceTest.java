@@ -158,7 +158,7 @@ public class InvoiceTest {
         invoice.addProduct(new DairyProduct("Chedar", new BigDecimal("10")), 3);
         // 1000x pinezka - item: 3
         invoice.addProduct(new OtherProduct("Pinezka", new BigDecimal("0.01")), 1000);
-        Assert.assertThat(new Integer("3"), Matchers.comparesEqualTo(invoice.getItemsTotal()));
+        Assert.assertThat(new Integer("3"), Matchers.comparesEqualTo(invoice.getNumberOfItems()));
 
     }
 
@@ -167,13 +167,32 @@ public class InvoiceTest {
 
         // 2x chleb - item: 1
         invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 2);
-        // 3x chedar - item: 2
-        invoice.addProduct(new DairyProduct("Chedar", new BigDecimal("10")), 3);
         // 4x chleb - item: 1
         invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 4);
-        // 5x chedar - item: 2
-        invoice.addProduct(new DairyProduct("Chedar", new BigDecimal("10")), 5);
-        Assert.assertThat(2, Matchers.comparesEqualTo(invoice.getItemsTotal()));
+        Assert.assertThat(1, Matchers.comparesEqualTo(invoice.getNumberOfItems()));
+
+    }
+
+    @Test
+    public void testProductQuantityWithDuplicateItems() {
+
+        // 2x chleb - item: 1
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 2);
+        // 4x chleb - item: 1
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 4);
+        Assert.assertThat(6, Matchers.comparesEqualTo(invoice.getProductQuantity(new TaxFreeProduct("Chleb", new BigDecimal("5")))));
+
+    }
+
+    @Test
+    public void testInvoiceWithDuplicateItemsWithoutQuantity() {
+
+        // 1x chleb - item: 1
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")));
+        // 1x chleb - item: 1
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")));
+        Assert.assertThat(1, Matchers.comparesEqualTo(invoice.getNumberOfItems()));
+        Assert.assertThat(2, Matchers.comparesEqualTo(invoice.getProductQuantity(new TaxFreeProduct("Chleb", new BigDecimal("5")))));
 
     }
 
