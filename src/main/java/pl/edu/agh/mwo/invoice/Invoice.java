@@ -35,10 +35,7 @@ public class Invoice {
         if (foundQuantity == null) {
 
             products.put(product, quantity);
-
-        }
-
-        else {
+        } else {
 
             products.put(product, foundQuantity + quantity);
         }
@@ -87,14 +84,11 @@ public class Invoice {
 
         System.out.println("Invoice number: " + getInvoiceNumber());
 
-        StringBuilder sb = new StringBuilder();
-
         for (Product product : products.keySet()) {
 
-            sb.append(product.getName() + " " + products.get(product) + " " + product.getPrice() + "zl\n").toString();
-
+            System.out.println(product.getName() + " " + products.get(product) + " "
+                    + product.getPrice() + "zl");
         }
-
         System.out.println("Number of items: " + getNumberOfItems());
     }
 }

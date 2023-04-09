@@ -6,6 +6,9 @@ import java.util.function.Supplier;
 
 public class FuelCanister extends Product {
 
+    public static final int DAY = 5;
+    public static final int MONTH = 3;
+
     private final BigDecimal excise = new BigDecimal("5.56");
 
     public static Supplier<LocalDateTime> localDateTime = () -> LocalDateTime.now();
@@ -18,11 +21,10 @@ public class FuelCanister extends Product {
     @Override
     public BigDecimal getPriceWithTax() {
 
-        if (localDateTime.get().getDayOfMonth() == 5 && localDateTime.get().getMonthValue() == 3) {
+        if (localDateTime.get().getDayOfMonth() == DAY
+                && localDateTime.get().getMonthValue() == MONTH) {
             return getPrice().add(excise);
-        }
-
-        else {
+        } else {
 
             return super.getPriceWithTax().add(excise);
 
