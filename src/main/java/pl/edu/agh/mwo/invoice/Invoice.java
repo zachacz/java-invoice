@@ -10,7 +10,18 @@ public class Invoice {
     private Map<Product, Integer> products = new HashMap<Product, Integer>();
     private static int nextNumber = 0;
 
-    private final int number = ++nextNumber;
+    private final int invoiceNumber;
+
+    private int numberOfItems;
+
+    public Invoice() {
+
+        this.invoiceNumber = ++nextNumber;
+
+        this.numberOfItems = getItemsTotal();
+
+
+    }
 
     public void addProduct(Product product) {
 
@@ -18,11 +29,47 @@ public class Invoice {
     }
 
     public void addProduct(Product product, Integer quantity) {
+
         if (product == null || quantity <= 0) {
             throw new IllegalArgumentException();
         }
-        products.put(product, quantity);
+
+        if (checkIfInvoiceHasProduct(product)) {
+
+                for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+
+                    Product foundProduct = entry.getKey();
+
+                    Integer foundQuantity = entry.getValue();
+
+                    if (foundProduct.equals((product))) {
+
+                        entry.setValue(foundQuantity + quantity);
+                    }
+                }
+        }
+
+        else {
+
+            products.put(product, quantity);
+        }
+
     }
+
+    public boolean checkIfInvoiceHasProduct(Product product) {
+
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+
+            Product foundProduct = entry.getKey();
+
+            if (product.equals(foundProduct)) {
+
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public BigDecimal getNetTotal() {
         BigDecimal totalNet = BigDecimal.ZERO;
@@ -46,7 +93,15 @@ public class Invoice {
         return totalGross;
     }
 
-    public int getNumber() {
-        return number;
+    public int getInvoiceNumber() {
+
+        return invoiceNumber;
+    }
+
+    public int getItemsTotal() {
+
+        numberOfItems = this.products.size();
+
+        return numberOfItems;
     }
 }
