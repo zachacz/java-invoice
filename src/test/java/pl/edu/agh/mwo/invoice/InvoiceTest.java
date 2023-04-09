@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.edu.agh.mwo.invoice.Invoice;
 import pl.edu.agh.mwo.invoice.product.DairyProduct;
 import pl.edu.agh.mwo.invoice.product.OtherProduct;
 import pl.edu.agh.mwo.invoice.product.Product;
@@ -90,7 +89,7 @@ public class InvoiceTest {
     }
 
     @Test
-    public void testInvoiceHasPropoerSubtotalWithQuantityMoreThanOne() {
+    public void testInvoiceHasProperSubtotalWithQuantityMoreThanOne() {
         // 2x kubek - price: 10
         invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal("5")), 2);
         // 3x kozi serek - price: 30
@@ -101,7 +100,7 @@ public class InvoiceTest {
     }
 
     @Test
-    public void testInvoiceHasPropoerTotalWithQuantityMoreThanOne() {
+    public void testInvoiceHasProperTotalWithQuantityMoreThanOne() {
         // 2x chleb - price with tax: 10
         invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 2);
         // 3x chedar - price with tax: 32.40
@@ -128,27 +127,73 @@ public class InvoiceTest {
 
     @Test
     public void testInvoiceHasNumberGreaterThan0() {
-        int number = invoice.getNumber();
+        int number = invoice.getInvoiceNumber();
         Assert.assertThat(number, Matchers.greaterThan(0));
     }
 
     @Test
     public void testTwoInvoicesHaveDifferentNumbers() {
-        int number1 = new Invoice().getNumber();
-        int number2 = new Invoice().getNumber();
+        int number1 = new Invoice().getInvoiceNumber();
+        int number2 = new Invoice().getInvoiceNumber();
         Assert.assertNotEquals(number1, number2);
     }
 
     @Test
     public void testInvoiceDoesNotChangeItsNumber() {
-        Assert.assertEquals(invoice.getNumber(), invoice.getNumber());
+        Assert.assertEquals(invoice.getInvoiceNumber(), invoice.getInvoiceNumber());
     }
 
     @Test
     public void testTheFirstInvoiceNumberIsLowerThanTheSecond() {
-        int number1 = new Invoice().getNumber();
-        int number2 = new Invoice().getNumber();
+        int number1 = new Invoice().getInvoiceNumber();
+        int number2 = new Invoice().getInvoiceNumber();
         Assert.assertThat(number1, Matchers.lessThan(number2));
+    }
+
+    @Test
+    public void testInvoiceHasProperNumberOfItems() {
+        // 2x chleb - item: 1
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 2);
+        // 3x chedar - item: 2
+        invoice.addProduct(new DairyProduct("Chedar", new BigDecimal("10")), 3);
+        // 1000x pinezka - item: 3
+        invoice.addProduct(new OtherProduct("Pinezka", new BigDecimal("0.01")), 1000);
+        Assert.assertThat(new Integer("3"), Matchers.comparesEqualTo(invoice.getNumberOfItems()));
+
+    }
+
+    @Test
+    public void testInvoiceWithDuplicateItems() {
+
+        // 2x chleb - item: 1
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 2);
+        // 4x chleb - item: 1
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 4);
+        Assert.assertThat(1, Matchers.comparesEqualTo(invoice.getNumberOfItems()));
+
+    }
+
+    @Test
+    public void testProductQuantityWithDuplicateItems() {
+
+        // 2x chleb - item: 1
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 2);
+        // 4x chleb - item: 1
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 4);
+        Assert.assertThat(6, Matchers.comparesEqualTo(invoice.getProductQuantity(new TaxFreeProduct("Chleb", new BigDecimal("5")))));
+
+    }
+
+    @Test
+    public void testInvoiceWithDuplicateItemsWithoutQuantity() {
+
+        // 1x chleb - item: 1
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")));
+        // 1x chleb - item: 1
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")));
+        Assert.assertThat(1, Matchers.comparesEqualTo(invoice.getNumberOfItems()));
+        Assert.assertThat(2, Matchers.comparesEqualTo(invoice.getProductQuantity(new TaxFreeProduct("Chleb", new BigDecimal("5")))));
+
     }
 
 }
